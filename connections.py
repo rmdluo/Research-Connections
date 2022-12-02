@@ -1,0 +1,54 @@
+import urllib, urllib.request
+import feedparser
+import networkx as nx
+import matplotlib.pyplot as plt
+import string
+from unidecode import unidecode
+
+
+subject = 'cs'
+author = 'Dilsun Kaynar'
+breadth = 5
+depth = 2
+
+toQuery = lambda author : unidecode(author.replace(" ", "+"))
+toNormal = lambda author : unidecode(string.capwords(author.replace("+", " ")))
+url = lambda author, subject : "https://export.arxiv.org/api/query?search_query=au:%s&cat=%s&max_results=%i" % (author, subject, breadth)
+
+graph = {toNormal(author) : set()} # author -> adjacent authors //// old author -> {adjacent authors -> num shared}
+queue = [toNormal(author)]
+nextQueue = []
+
+# print(data.decode('utf-8'))
+
+for i in range(depth):
+    while(len(queue) != 0):
+        a = queue.pop(0)
+        # if(len(graph.get(a)) == 0):
+        # print(a)
+        data = urllib.request.urlopen(url(toQuery(a), subject)).read()
+        feed = feedparser.parse(data)
+
+        for entry in feed.entries:
+            authorSet = {toNormal(author.name) for author in entry.authors}
+            authorSet.discard(a)
+            graph[a] = graph.get(toNormal(a)).union(authorSet)
+
+            for name in authorSet:
+                if(graph.get(name) == None):
+                    graph[toNormal(name)] = set()
+                    nextQueue.append(toNormal(name))
+    queue = nextQueue
+    nextQueue = []
+visG = nx.Graph()
+
+# edges = [([a1, a2] for a2 in graph[a1]) for a1 in graph.keys()]
+edges = []
+for a1 in graph.keys():
+    for a2 in graph[a1]:
+        edges.append([a1, a2])
+
+visG.add_edges_from(edges)
+nx.draw_networkx(visG)
+plt.tight_layout()
+plt.show()
