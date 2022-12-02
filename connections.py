@@ -1,16 +1,43 @@
+# HTTPS requests
 import urllib, urllib.request
 import feedparser
+
+# graph construction/drawing
 import networkx as nx
+from pyvis.network import Network
 import matplotlib.pyplot as plt
+
+# string manipulation
 import string
 from unidecode import unidecode
-from pyvis.network import Network
+
+# command line arguments
+import argparse
+
+cmdParser = argparse.ArgumentParser()
+cmdParser.add_argument('author', help="Paper author to look into -- replace spaces with + please")
+cmdParser.add_argument('field_of_study', default='cs', \
+                       help="Author's field of study", \
+                       choices=['cs',
+                                'math',
+                                'econ',
+                                'eess (electrical engineering and systems science)',
+                                'physics',
+                                'q-bio',
+                                'q-fin',
+                                'stat'])
+cmdParser.add_argument('breadth', type=int, default = 5, \
+                       help="How many papers to look at per author")
+cmdParser.add_argument('depth', type=int, default = 2, \
+                       help="How many layers deep to look")
+
+args = cmdParser.parse_args()
 
 # parameters
-subject = 'math'
-author = 'Poh Shen Loh'
-breadth = 5
-depth = 2
+author = args[0]
+subject = args[1]
+breadth = args[2]
+depth = args[3]
 
 # base querying functions
 # Converts between a name's query form and normal form and turns an author
