@@ -55,9 +55,6 @@ for a1 in graph.keys():
 visG.add_edges_from(edges)
 nt = Network('500px', '500px')
 nt.from_nx(visG)
-# nt.toggle_physics(True)
+
+# saves the graph and pulls it up in a web browser (browser part inconsistent)
 nt.save_graph('%s_connections.html' % toFilename(author))
-# plots the graph using pyplot
-# nx.draw_networkx(visG)
-# plt.tight_layout()
-# plt.show()
