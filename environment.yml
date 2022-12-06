@@ -1,7 +1,7 @@
 name: research-connections
 channels:
-  - defaults
   - conda-forge
+  - defaults
 dependencies:
   - feedparser
   - networkx

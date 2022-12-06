@@ -5,6 +5,8 @@ It inputs a professor/researcher, looks them up on arxiv.org, and creates a visu
 ## Setup
 Install Anaconda/Miniconda if you haven't: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 
+Run `conda config --set channel_priority strict`.
+
 Run `conda env create -f environment.yml` to create the conda environment research-connections.
 
 Run `conda activate research-connections` to activate that environment.
