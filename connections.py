@@ -16,8 +16,8 @@ import argparse
 
 cmdParser = argparse.ArgumentParser()
 cmdParser.add_argument('author', help="Paper author to look into -- replace spaces with + please")
-cmdParser.add_argument('field_of_study', default='cs', \
-                       help="Author's field of study", \
+cmdParser.add_argument('-f', '--field', default='', \
+                       help="Specify author's field of study", \
                        choices=['cs',
                                 'math',
                                 'econ',
@@ -25,19 +25,14 @@ cmdParser.add_argument('field_of_study', default='cs', \
                                 'physics',
                                 'q-bio',
                                 'q-fin',
-                                'stat'])
-cmdParser.add_argument('breadth', type=int, default = 5, \
-                       help="How many papers to look at per author")
-cmdParser.add_argument('depth', type=int, default = 2, \
-                       help="How many layers deep to look")
+                                'stat'], \
+                       required=False)
+cmdParser.add_argument('-b', '--breadth', type=int, default = 5, required=False, \
+                       help="Specify how many papers to look at per author (breadth)")
+cmdParser.add_argument('-d', '--depth', type=int, default = 2, required=False, \
+                       help="Specify how many layers deep to look (depth)")
 
 args = cmdParser.parse_args()
-
-# parameters
-author = args[0]
-subject = args[1]
-breadth = args[2]
-depth = args[3]
 
 # base querying functions
 # Converts between a name's query form and normal form and turns an author
@@ -46,6 +41,12 @@ toQuery = lambda author : unidecode(author.replace(" ", "+"))
 toNormal = lambda author : unidecode(string.capwords(author.replace("+", " ")))
 toFilename = lambda author : author.replace(" ", "_").lower()
 url = lambda author : "https://export.arxiv.org/api/query?search_query=au:%s&cat=%s&max_results=%i" % (author, subject, breadth)
+
+# parameters
+author = toNormal(args.author)
+subject = args.field
+breadth = args.breadth
+depth = args.depth
 
 graph = {toNormal(author) : set()} # author -> adjacent authors //// old author -> {adjacent authors -> num shared}
 queue = [toNormal(author)]
