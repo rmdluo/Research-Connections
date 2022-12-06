@@ -1,12 +1,11 @@
 name: research-connections
 channels:
   - defaults
+  - conda-forge
 dependencies:
-  - urllib3
   - feedparser
   - networkx
   - matplotlib
   - scipy
   - unidecode
   - pyvis
-prefix: C:\Users\moomo\miniconda3\envs\research-connections
